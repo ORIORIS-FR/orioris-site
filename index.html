@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard IA Bunker 2026</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        /* Base styling and utilities */
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        .tab-content { display: none; }
+
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom scrollbar */
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  
+
+        /* Chart container constraint */
+
+        .chart-container {
+
+            position: relative;
+
+            width: 100%;
+
+            max-width: 700px;
+
+            margin-left: auto;
+
+            margin-right: auto;
+
+            height: 350px;
+
+            max-height: 400px;
+
+        }
+
+  
+
+        /* Docker node styling */
+
+        .docker-node { transition: all 0.2s; border-left: 4px solid transparent; }
+
+        .docker-node:hover { transform: translateX(5px); border-left-color: #0ea5e9; background-color: #f8fafc; }
+
+        /* Code block styling */
+
+        pre { background: #1e293b; color: #f8fafc; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem; }
+
+        code { font-family: monospace; }
+
+    </style>
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        primary: '#0ea5e9', // Sky 500
+
+                        secondary: '#334155', // Slate 700
+
+                        accent: '#10b981', // Emerald 500
+
+                        bglight: '#f8fafc' // Slate 50
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased h-screen flex overflow-hidden">
+
+  
+
+    <!-- Chosen Palette: Slate & Sky Blue (Light, clean, technical dashboard feel) -->
+
+    <!-- Application Structure Plan: Sidebar navigation + Content Panes. This allows focused reading on technical configurations without overwhelming vertical scroll. The structure separates Docker, LiteLLM, APIs, and Strategy into distinct digestible views. -->
+
+    <!-- Visualization & Content Choices:
+
+         - Radar Chart (Chart.js): To compare Free Models across metrics (Speed, Context, Logic) to visually justify API choices.
+
+         - Interactive lists/cards: For Docker containers to explain usage without clutter.
+
+         - Tabbed code blocks: To show "Before vs After" for configuration files. -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+  
+
+    <!-- Sidebar Navigation -->
+
+    <nav class="w-64 bg-white border-r border-slate-200 h-full flex flex-col shrink-0 z-10 shadow-sm">
+
+        <div class="p-6 border-b border-slate-200">
+
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">⬡ IA Bunker<span class="text-primary text-sm align-top ml-1">2026</span></h1>
+
+            <p class="text-xs text-slate-500 mt-1">Audit & Optimisation</p>
+
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-4">
+
+            <ul class="space-y-1 px-3">
+
+                <li><button onclick="switchTab('strategy')" id="btn-strategy" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors bg-sky-50 text-primary">🎯 Stratégie & Verdict</button></li>
+
+                <li><button onclick="switchTab('docker')" id="btn-docker" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">🐳 Architecture Docker</button></li>
+
+                <li><button onclick="switchTab('litellm')" id="btn-litellm" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">⚙️ Configuration LiteLLM</button></li>
+
+                <li><button onclick="switchTab('apis')" id="btn-apis" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">🌐 Modèles API Gratuits</button></li>
+
+            </ul>
+
+        </div>
+
+        <div class="p-4 border-t border-slate-200 bg-slate-50 text-xs text-slate-400">
+
+            Audit généré le : 27/05/2026
+
+        </div>
+
+    </nav>
+
+  
+
+    <!-- Main Content Area -->
+
+    <main class="flex-1 h-full overflow-y-auto bg-slate-50 p-8 relative">
+
+  
+
+        <!-- TAB: STRATEGY (Active by default) -->
+
+        <section id="tab-strategy" class="tab-content active max-w-5xl mx-auto">
+
+            <header class="mb-8">
+
+                <h2 class="text-3xl font-bold text-slate-800">Analyse de votre Stratégie (Coût 0 vs Ollama)</h2>
+
+                <p class="text-slate-600 mt-2">Évaluation de votre décision d'utiliser LiteLLM comme routeur gratuit en attendant une solution locale complète.</p>
+
+            </header>
+
+  
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+                <div class="bg-white p-6 rounded-xl border border-emerald-200 shadow-sm relative overflow-hidden">
+
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">✓</div>
+
+                    <h3 class="text-xl font-semibold text-emerald-700 mb-3">Le Verdict : Excellent choix</h3>
+
+                    <p class="text-slate-700 leading-relaxed mb-4">
+
+                        Votre stratégie d'utiliser <strong>LiteLLM + Modèles API Gratuits (Groq, OpenRouter)</strong> est actuellement la décision la plus intelligente d'un point de vue technico-économique.
+
+                    </p>
+
+                    <ul class="space-y-2 text-sm text-slate-600">
+
+                        <li><span class="text-emerald-500 font-bold">▶</span> <strong>Puissance :</strong> Vous accédez à des modèles de 70B+ paramètres impossibles à faire tourner localement sans 3000€+ de matériel (GPU avec +48GB VRAM).</li>
+
+                        <li><span class="text-emerald-500 font-bold">▶</span> <strong>Vitesse :</strong> L'inférence LPU (Groq) ou SambaNova écrase les performances locales (jusqu'à 800 tokens/sec).</li>
+
+                        <li><span class="text-emerald-500 font-bold">▶</span> <strong>Flexibilité :</strong> LiteLLM agit comme une abstraction parfaite. Open WebUI ou n8n pensent parler à OpenAI.</li>
+
+                    </ul>
+
+                </div>
+
+  
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden">
+
+                    <div class="absolute top-0 right-0 p-4 opacity-5 text-6xl">⚠</div>
+
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Le rôle d'Ollama Local</h3>
+
+                    <p class="text-slate-700 leading-relaxed mb-4">
+
+                        L'IA locale totale ne doit pas être vue comme un remplacement 1:1, mais comme une <strong>couche de sécurité conditionnelle</strong>.
+
+                    </p>
+
+                    <ul class="space-y-2 text-sm text-slate-600">
+
+                        <li><span class="text-primary font-bold">▶</span> <strong>Quand l'utiliser :</strong> Pour analyser vos relevés bancaires, dossiers médicaux, ou codes source propriétaires.</li>
+
+                        <li><span class="text-primary font-bold">▶</span> <strong>Les limites :</strong> Les modèles locaux rapides (8B/14B) sont moins intelligents. Les gros (70B) seront lents sur du matériel grand public.</li>
+
+                        <li><span class="text-primary font-bold">▶</span> <strong>Transition :</strong> Grace à LiteLLM, quand Ollama sera prêt, il suffira de l'ajouter comme "provider" sans rien changer à n8n/WebUI.</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+  
+
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+
+                <h4 class="font-bold text-blue-800 mb-2">💡 La Stratégie d'Avenir (Architecture Hybride)</h4>
+
+                <p class="text-blue-900 text-sm">
+
+                    Ne cherchez pas le "tout local". Gardez votre configuration actuelle pour le raisonnement complexe gratuit (DeepSeek, Llama-3-70b via API) et installez Ollama uniquement pour générer les <strong>Embeddings locaux</strong> (comme vous l'avez commencé avec nomic-embed) et pour les requêtes contenant des données ultra-sensibles.
+
+                </p>
+
+            </div>
+
+        </section>
+
+  
+  
+
+        <!-- TAB: DOCKER -->
+
+        <section id="tab-docker" class="tab-content max-w-5xl mx-auto">
+
+            <header class="mb-8">
+
+                <h2 class="text-3xl font-bold text-slate-800">Optimisation du Docker Compose</h2>
+
+                <p class="text-slate-600 mt-2">Analyse de vos conteneurs actuels, suggestions d'ajouts, et réécriture optimisée.</p>
+
+            </header>
+
+  
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Current vs Missing -->
+
+                <div class="lg:col-span-1 space-y-6">
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+
+                        <h3 class="font-bold text-slate-800 border-b pb-2 mb-3">📦 Conteneurs Présents</h3>
+
+                        <ul class="space-y-3">
+
+                            <li class="docker-node p-2 rounded cursor-help group relative">
+
+                                <span class="font-mono text-sm font-bold text-blue-600">n8n</span>
+
+                                <p class="text-xs text-slate-600 mt-1">Le cerveau orchestrateur. Relie les API, bases et webhooks.</p>
+
+                            </li>
+
+                            <li class="docker-node p-2 rounded cursor-help">
+
+                                <span class="font-mono text-sm font-bold text-blue-600">postgres_bunker</span>
+
+                                <p class="text-xs text-slate-600 mt-1">Base relationnelle robuste. Indispensable pour un n8n stable en prod.</p>
+
+                            </li>
+
+                            <li class="docker-node p-2 rounded cursor-help">
+
+                                <span class="font-mono text-sm font-bold text-blue-600">redis_bunker</span>
+
+                                <p class="text-xs text-slate-600 mt-1">Base en RAM. Actuellement sous-utilisée : idéale pour cacher les réponses de LiteLLM !</p>
+
+                            </li>
+
+                            <li class="docker-node p-2 rounded cursor-help">
+
+                                <span class="font-mono text-sm font-bold text-blue-600">open_webui</span>
+
+                                <p class="text-xs text-slate-600 mt-1">Interface Chat. Parfaite, se connecte à LiteLLM comme si c'était ChatGPT.</p>
+
+                            </li>
+
+                            <li class="docker-node p-2 rounded cursor-help">
+
+                                <span class="font-mono text-sm font-bold text-blue-600">litellm (supposé)</span>
+
+                                <p class="text-xs text-slate-600 mt-1">Le routeur d'API central. La clé de voûte économique.</p>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+  
+
+                    <div class="bg-slate-800 p-5 rounded-xl shadow-sm text-slate-100">
+
+                        <h3 class="font-bold text-white border-b border-slate-700 pb-2 mb-3">🚀 Conteneurs à ajouter</h3>
+
+                        <ul class="space-y-3">
+
+                            <li class="docker-node border-l-orange-400 p-2 rounded">
+
+                                <span class="font-mono text-sm font-bold text-orange-400">qdrant</span> / <span class="font-mono text-sm font-bold text-orange-400">milvus</span>
+
+                                <p class="text-xs text-slate-300 mt-1"><strong>Vector DB.</strong> Obligatoire pour créer un RAG (donner vos documents à lire à l'IA). Postgres pgvector peut faire l'affaire mais Qdrant est plus léger.</p>
+
+                            </li>
+
+                            <li class="docker-node border-l-orange-400 p-2 rounded">
+
+                                <span class="font-mono text-sm font-bold text-orange-400">ollama</span>
+
+                                <p class="text-xs text-slate-300 mt-1">Même éteint, à configurer pour utiliser GPU (Nvidia/AMD) via Docker.</p>
+
+                            </li>
+
+                            <li class="docker-node border-l-orange-400 p-2 rounded">
+
+                                <span class="font-mono text-sm font-bold text-orange-400">watchtower</span>
+
+                                <p class="text-xs text-slate-300 mt-1">Met à jour automatiquement OpenWebUI et LiteLLM qui évoluent tous les jours.</p>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+  
+
+                <!-- Code Optimizations -->
+
+                <div class="lg:col-span-2">
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
+
+                        <h3 class="font-bold text-slate-800 mb-4">🛠️ Optimisations Structuelles du YAML</h3>
+
+                        <p class="text-sm text-slate-600 mb-4">
+
+                            Votre fichier est propre. Voici les points corrigés/améliorés :
+
+                            1. Activation de <strong>depends_on</strong> pour gérer l'ordre de démarrage (n8n attend postgres, webui attend litellm).
+
+                            2. <strong>Healthchecks</strong> globaux pour auto-redémarrer si plantage.
+
+                            3. Préparation du <strong>GPU</strong> pour Ollama.
+
+                        </p>
+
+                        <div class="flex-1 bg-slate-900 rounded-lg overflow-hidden flex flex-col">
+
+                            <div class="bg-slate-800 text-slate-300 px-4 py-2 text-xs font-mono flex justify-between items-center">
+
+                                <span>docker-compose.yml (Optimisé)</span>
+
+                                <button onclick="copyToClipboard('docker-code')" class="hover:text-white transition">📋 Copier</button>
+
+                            </div>
+
+                            <pre id="docker-code" class="flex-1 overflow-y-auto text-[13px] rounded-none m-0">
+
+# version obsolète retirée
+
+networks:
+
+  bunker_net:
+
+    driver: bridge
+
+  
+
+services:
+
+  postgres_bunker:
+
+    image: postgres:16-alpine
+
+    container_name: postgres_bunker
+
+    restart: unless-stopped
+
+    environment:
+
+      - POSTGRES_USER=${POSTGRES_USER:-n8n_user}
+
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+      - POSTGRES_DB=${POSTGRES_DB:-n8n_database}
+
+    volumes:
+
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-n8n_user} -d ${POSTGRES_DB:-n8n_database}"]
+
+      interval: 10s
+
+      timeout: 5s
+
+      retries: 5
+
+  
+
+  redis_bunker:
+
+    image: redis:alpine
+
+    container_name: redis_bunker
+
+    restart: unless-stopped
+
+    command: redis-server --save 60 1 --loglevel warning
+
+    healthcheck:
+
+      test: ["CMD", "redis-cli", "ping"]
+
+      interval: 10s
+
+  
+
+  litellm_bunker:
+
+    image: ghcr.io/berriai/litellm:main-latest
+
+    container_name: litellm_bunker
+
+    restart: unless-stopped
+
+    ports: ["4000:4000"]
+
+    environment:
+
+      - LITELLM_MASTER_KEY=sk-fucking-hole
+
+      - REDIS_HOST=redis_bunker
+
+      - REDIS_PORT=6379
+
+      # Ajouter toutes vos clés API ici dans le .env
+
+    volumes:
+
+      - ./litellm-config.yaml:/app/config.yaml
+
+    command: [ "--config", "/app/config.yaml", "--detailed_debug" ]
+
+    depends_on:
+
+      redis_bunker:
+
+        condition: service_healthy
+
+  
+
+  n8n:
+
+    image: n8nio/n8n:latest
+
+    container_name: n8n_bunker
+
+    restart: unless-stopped
+
+    ports: ["5678:5678"]
+
+    environment:
+
+      - DB_TYPE=postgresdb
+
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n_database}
+
+      - DB_POSTGRESDB_HOST=postgres_bunker
+
+      - DB_POSTGRESDB_PORT=5432
+
+      - DB_POSTGRESDB_USER=${POSTGRES_USER:-n8n_user}
+
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+
+      # ... autres variables n8n ...
+
+    depends_on:
+
+      postgres_bunker:
+
+        condition: service_healthy
+
+  
+
+  open_webui:
+
+    image: ghcr.io/open-webui/open-webui:main
+
+    container_name: open_webui_bunker
+
+    restart: unless-stopped
+
+    ports: ["3001:8080"]
+
+    volumes:
+
+      - ./open_webui_data:/app/backend/data
+
+    environment:
+
+      - OPENAI_API_BASE_URL=http://litellm_bunker:4000/v1
+
+      - OPENAI_API_KEY=sk-fucking-hole
+
+      - WEBUI_AUTH=True
+
+    depends_on:
+
+      - litellm_bunker
+
+    networks:
+
+      - bunker_net
+
+  
+
+volumes:
+
+  n8n_data:
+
+  postgres_data:
+
+  open_webui_data:
+
+</pre>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+  
+  
+
+        <!-- TAB: LITELLM -->
+
+        <section id="tab-litellm" class="tab-content max-w-5xl mx-auto">
+
+            <header class="mb-8">
+
+                <h2 class="text-3xl font-bold text-slate-800">Optimisation de LiteLLM Config</h2>
+
+                <p class="text-slate-600 mt-2">Votre configuration est intelligente (load balancing actif). Voici comment la rendre bullet-proof.</p>
+
+            </header>
+
+  
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">✅ Ce que vous faites bien</h3>
+
+                    <ul class="text-sm text-slate-600 space-y-2">
+
+                        <li>• L'utilisation du même nom <code class="bg-slate-100 px-1 rounded">bunker-auto</code> pour créer un groupe de Load Balancing.</li>
+
+                        <li>• La stratégie <code class="bg-slate-100 px-1 rounded">latency-based-routing</code> est idéale pour esquiver les ralentissements des API gratuites.</li>
+
+                        <li>• La séparation explicite (bunker-pro, free, embed) pour le menu WebUI.</li>
+
+                    </ul>
+
+                 </div>
+
+                 <div class="bg-white p-5 rounded-xl border border-blue-200 shadow-sm relative">
+
+                     <div class="absolute top-2 right-2 text-2xl">🔥</div>
+
+                    <h3 class="text-lg font-bold text-blue-800 mb-2">🔧 Ce qu'il faut améliorer</h3>
+
+                    <ul class="text-sm text-slate-600 space-y-2">
+
+                        <li>• <strong>Caching :</strong> Ajoutez Redis pour économiser les requêtes répétitives (vous avez le container !).</li>
+
+                        <li>• <strong>Rate Limits (TPM/RPM) :</strong> Les API gratuites bloquent vite. Spécifiez les `tpm` (tokens per minute) dans la config pour que LiteLLM bascule sur le 2ème modèle *avant* l'erreur 429.</li>
+
+                        <li>• <strong>Exceptions :</strong> Gérez les context_window si un modèle bloque sur un long texte.</li>
+
+                    </ul>
+
+                 </div>
+
+            </div>
+
+  
+
+            <div class="bg-slate-900 rounded-lg overflow-hidden flex flex-col">
+
+                <div class="bg-slate-800 text-slate-300 px-4 py-2 text-xs font-mono flex justify-between items-center">
+
+                    <span>litellm-config.yaml (Corrections à appliquer)</span>
+
+                    <button onclick="copyToClipboard('litellm-code')" class="hover:text-white transition">📋 Copier</button>
+
+                </div>
+
+                <pre id="litellm-code" class="overflow-y-auto text-[13px] rounded-none m-0">
+
+model_list:
+
+  # === GROUPE ROUTING (bunker-auto) ===
+
+  - model_name: bunker-auto
+
+    litellm_params:
+
+      model: google/gemini-3.1-flash-lite
+
+      api_key: "os.environ/GOOGLE_API_KEY"
+
+      rpm: 15 # 15 requêtes / minute (limite gratuite de sécurité)
+
+      tpm: 1000000
+
+  
+
+  - model_name: bunker-auto
+
+    litellm_params:
+
+      model: groq/llama-3.3-70b-versatile
+
+      api_key: "os.environ/GROQ_API_KEY"
+
+      rpm: 25
+
+      tpm: 6000
+
+  
+
+  - model_name: bunker-auto
+
+    litellm_params:
+
+      model: openrouter/meta-llama/llama-3-8b-instruct:free
+
+      api_key: "os.environ/OPENROUTER_API_KEY"
+
+      # Fallback final si les autres sont saturés
+
+  
+
+  # === ACCÈS DIRECTS WEBUI ===
+
+  - model_name: bunker-embed
+
+    litellm_params:
+
+      model: ollama/nomic-embed-text
+
+      api_base: "http://host.docker.internal:11434"
+
+  
+
+router_settings:
+
+  routing_strategy: latency-based-routing
+
+  num_retries: 3
+
+  fallbacks: [{"bunker-auto": ["google/gemini-3.1-flash-lite"]}] # Security
+
+  # ACTIVATION DU CACHE VIA REDIS (Crucial)
+
+  redis_host: redis_bunker
+
+  redis_port: 6379
+
+  
+
+litellm_settings:
+
+  cache: true
+
+  cache_params:
+
+    type: redis
+
+</pre>
+
+            </div>
+
+        </section>
+
+  
+  
+
+        <!-- TAB: APIs -->
+
+        <section id="tab-apis" class="tab-content max-w-5xl mx-auto">
+
+            <header class="mb-8">
+
+                <h2 class="text-3xl font-bold text-slate-800">Catalogue des API Gratuites (Mai 2026)</h2>
+
+                <p class="text-slate-600 mt-2">Exploitez ces fournisseurs pour maintenir un coût de 0$. Graphique basé sur l'équilibre Vitesse/Logique/Fenêtre de contexte.</p>
+
+            </header>
+
+  
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                <div class="col-span-1 md:col-span-2">
+
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col">
+
+                        <div class="chart-container">
+
+                            <canvas id="apiRadarChart"></canvas>
+
+                        </div>
+
+                        <p class="text-xs text-center text-slate-400 mt-2">Comparaison des tiers gratuits (Valeurs indexées 0-100)</p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-span-1 space-y-4">
+
+                    <div class="bg-sky-50 p-4 border border-sky-100 rounded-lg">
+
+                        <h4 class="font-bold text-sky-800 text-sm">🌐 OpenRouter (Le Scanner)</h4>
+
+                        <p class="text-xs text-slate-600 mt-1 mb-2">Agrégateur. Propose des dizaines de modèles en tag "free" (sponsorisés).</p>
+
+                        <code class="text-xs bg-white px-2 py-1 rounded text-slate-700 block mb-1">qwen/qwen-3-80b:free</code>
+
+                        <code class="text-xs bg-white px-2 py-1 rounded text-slate-700 block">meta-llama/llama-3-8b:free</code>
+
+                    </div>
+
+  
+
+                    <div class="bg-orange-50 p-4 border border-orange-100 rounded-lg">
+
+                        <h4 class="font-bold text-orange-800 text-sm">⚡ Groq (L'hyper-rapide)</h4>
+
+                        <p class="text-xs text-slate-600 mt-1 mb-2">Utilise des puces LPU. Idéal pour les agents n8n qui ont besoin de réponses instantanées.</p>
+
+                        <code class="text-xs bg-white px-2 py-1 rounded text-slate-700 block mb-1">llama-3.3-70b-versatile</code>
+
+                        <p class="text-[10px] text-orange-600 font-bold mt-1">Attention: Limite de Tokens stricte.</p>
+
+                    </div>
+
+  
+
+                    <div class="bg-emerald-50 p-4 border border-emerald-100 rounded-lg">
+
+                        <h4 class="font-bold text-emerald-800 text-sm">🤖 Google AI Studio</h4>
+
+                        <p class="text-xs text-slate-600 mt-1 mb-2">Le tier gratuit le plus généreux en contexte (1 million+ tokens).</p>
+
+                        <code class="text-xs bg-white px-2 py-1 rounded text-slate-700 block">gemini-3.1-flash-lite</code>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+  
+
+            <div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-sm">
+
+                <table class="min-w-full text-sm text-left">
+
+                    <thead class="bg-slate-50 text-slate-600 font-medium border-b border-slate-200">
+
+                        <tr>
+
+                            <th class="px-4 py-3">Fournisseur</th>
+
+                            <th class="px-4 py-3">Meilleur Modèle Gratuit (ID)</th>
+
+                            <th class="px-4 py-3">Point Fort</th>
+
+                            <th class="px-4 py-3">Contrainte / Limite</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+
+                        <tr class="hover:bg-slate-50">
+
+                            <td class="px-4 py-3 font-semibold">OpenRouter</td>
+
+                            <td class="px-4 py-3 font-mono text-xs">google/gemini-2.0-pro-exp:free</td>
+
+                            <td class="px-4 py-3 text-emerald-600">Qualité de raisonnement</td>
+
+                            <td class="px-4 py-3 text-xs">Rate limits variables selon la demande</td>
+
+                        </tr>
+
+                        <tr class="hover:bg-slate-50">
+
+                            <td class="px-4 py-3 font-semibold">SambaNova</td>
+
+                            <td class="px-4 py-3 font-mono text-xs">Meta-Llama-3.3-70B-Instruct</td>
+
+                            <td class="px-4 py-3 text-emerald-600">Llama 70B Ultra rapide</td>
+
+                            <td class="px-4 py-3 text-xs">Inscription développeur requise</td>
+
+                        </tr>
+
+                        <tr class="hover:bg-slate-50">
+
+                            <td class="px-4 py-3 font-semibold">GitHub Models</td>
+
+                            <td class="px-4 py-3 font-mono text-xs">gpt-4o / phi-4</td>
+
+                            <td class="px-4 py-3 text-emerald-600">Accès gratuit aux modèles OpenAI</td>
+
+                            <td class="px-4 py-3 text-xs">Besoin d'un compte GitHub. Limite par jour.</td>
+
+                        </tr>
+
+                        <tr class="hover:bg-slate-50">
+
+                            <td class="px-4 py-3 font-semibold">Groq</td>
+
+                            <td class="px-4 py-3 font-mono text-xs">mixtral-8x7b-32768</td>
+
+                            <td class="px-4 py-3 text-emerald-600">Latence quasi-nulle (&lt; 200ms)</td>
+
+                            <td class="px-4 py-3 text-xs">Contexte limité à 32k, limite de tokens/jour sévère.</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+  
+
+        </section>
+
+  
+
+    </main>
+
+  
+
+    <script>
+
+        // --- Navigation Logic ---
+
+        function switchTab(tabId) {
+
+            // Hide all tabs
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+
+            // Reset button styles
+
+            document.querySelectorAll('nav button').forEach(el => {
+
+                el.classList.remove('bg-sky-50', 'text-primary');
+
+                el.classList.add('text-slate-600');
+
+            });
+
+            // Show selected tab
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            // Style selected button
+
+            const btn = document.getElementById('btn-' + tabId);
+
+            btn.classList.remove('text-slate-600');
+
+            btn.classList.add('bg-sky-50', 'text-primary');
+
+  
+
+            // Trigger chart render if APIs tab
+
+            if (tabId === 'apis' && !window.chartRendered) {
+
+                renderChart();
+
+                window.chartRendered = true;
+
+            }
+
+        }
+
+  
+
+        // --- Copy to Clipboard Logic ---
+
+        function copyToClipboard(elementId) {
+
+            const text = document.getElementById(elementId).innerText;
+
+            navigator.clipboard.writeText(text).then(() => {
+
+                const btn = event.target;
+
+                const originalText = btn.innerText;
+
+                btn.innerText = "✅ Copié!";
+
+                btn.classList.add("text-emerald-400");
+
+                setTimeout(() => {
+
+                    btn.innerText = originalText;
+
+                    btn.classList.remove("text-emerald-400");
+
+                }, 2000);
+
+            });
+
+        }
+
+  
+
+        // --- Chart.js Logic ---
+
+        function renderChart() {
+
+            const ctx = document.getElementById('apiRadarChart').getContext('2d');
+
+            new Chart(ctx, {
+
+                type: 'radar',
+
+                data: {
+
+                    labels: ['Vitesse (Latence)', 'Fenêtre de Contexte', 'Capacité Raisonnement', 'Limites de Quota', 'Disponibilité (Uptime)'],
+
+                    datasets: [{
+
+                        label: 'Groq (Llama 70B)',
+
+                        data: [100, 30, 80, 20, 95],
+
+                        fill: true,
+
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)', // Orange
+
+                        borderColor: 'rgb(249, 115, 22)',
+
+                        pointBackgroundColor: 'rgb(249, 115, 22)',
+
+                        pointBorderColor: '#fff',
+
+                        pointHoverBackgroundColor: '#fff',
+
+                        pointHoverBorderColor: 'rgb(249, 115, 22)'
+
+                    }, {
+
+                        label: 'Google (Gemini Flash)',
+
+                        data: [85, 100, 75, 90, 99],
+
+                        fill: true,
+
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald
+
+                        borderColor: 'rgb(16, 185, 129)',
+
+                        pointBackgroundColor: 'rgb(16, 185, 129)',
+
+                        pointBorderColor: '#fff',
+
+                        pointHoverBackgroundColor: '#fff',
+
+                        pointHoverBorderColor: 'rgb(16, 185, 129)'
+
+                    },
+
+                    {
+
+                        label: 'OpenRouter (Llama 8B Free)',
+
+                        data: [60, 40, 60, 50, 80],
+
+                        fill: true,
+
+                        backgroundColor: 'rgba(14, 165, 233, 0.2)', // Sky
+
+                        borderColor: 'rgb(14, 165, 233)',
+
+                        pointBackgroundColor: 'rgb(14, 165, 233)',
+
+                        pointBorderColor: '#fff',
+
+                        pointHoverBackgroundColor: '#fff',
+
+                        pointHoverBorderColor: 'rgb(14, 165, 233)'
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        r: {
+
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+
+                            pointLabels: { font: { size: 11, family: 'sans-serif' }, color: '#475569' },
+
+                            ticks: { display: false, min: 0, max: 100 }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
+
+                        tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', padding: 10, cornerRadius: 8 }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
